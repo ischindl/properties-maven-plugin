@@ -2,20 +2,20 @@ package org.codehaus.mojo.properties;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file 
+ * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, 
+ *
+ * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY 
- * KIND, either express or implied.  See the License for the 
- * specific language governing permissions and limitations 
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
  * under the License.
  */
 
@@ -86,7 +86,7 @@ public class ReadPropertiesMojo
 
     /**
      * Default scope for test access.
-     * 
+     *
      * @param urls The URLs to set for tests.
      */
     public void setUrls( String[] urls )
@@ -118,6 +118,18 @@ public class ReadPropertiesMojo
     public void setKeyPrefix( String keyPrefix )
     {
         this.keyPrefix = keyPrefix;
+    }
+
+    /**
+     * Prefix that will be removed from name of each property.
+     * Can be useful for separating properties with same name for different configurations.
+     */
+    @Parameter
+    private String configPrefix = null;
+
+    public void setConfigPrefix( String configPrefix )
+    {
+        this.configPrefix = configPrefix;
     }
 
     /**
@@ -190,14 +202,17 @@ public class ReadPropertiesMojo
 
             try
             {
-                if ( keyPrefix != null )
+                if ( keyPrefix != null || configPrefix!= null)
                 {
                     Properties properties = new Properties();
                     properties.load(stream);
                     Properties projectProperties = project.getProperties();
                     for(String key: properties.stringPropertyNames())
                     {
-                        projectProperties.put(keyPrefix + key, properties.get(key));
+                    	String newKey = key.replaceAll(configPrefix!=null?configPrefix:"", "");
+                    	if(keyPrefix!= null)
+                    		newKey = keyPrefix + newKey;
+                        projectProperties.put(newKey, properties.get(key));
                     }
                 }
                 else
@@ -288,7 +303,7 @@ public class ReadPropertiesMojo
 
     /**
      * Override-able for test purposes.
-     * 
+     *
      * @return The shell environment variables, can be empty but never <code>null</code>.
      * @throws IOException If the environment variables could not be queried from the shell.
      */
@@ -300,7 +315,7 @@ public class ReadPropertiesMojo
 
     /**
      * Default scope for test access.
-     * 
+     *
      * @param quiet Set to <code>true</code> if missing files can be skipped.
      */
     void setQuiet( boolean quiet )
@@ -310,7 +325,7 @@ public class ReadPropertiesMojo
 
     /**
      * Default scope for test access.
-     * 
+     *
      * @param project The test project.
      */
     void setProject( MavenProject project )

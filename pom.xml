@@ -29,12 +29,12 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.codehaus.mojo</groupId>
+  <groupId>sk.digitalsystems.mojo</groupId>
   <artifactId>properties-maven-plugin</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1.1</version>
 
   <name>Properties Maven Plugin</name>
-  <description> 
+  <description>
     The Properties Maven Plugin is here to make life a little easier when dealing
     with properties. It provides goals to read and write properties from files.
   </description>
