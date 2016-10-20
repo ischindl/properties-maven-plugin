@@ -212,7 +212,8 @@ public class ReadPropertiesMojo
                     	String newKey = key.replaceAll(configPrefix!=null?configPrefix:"", "");
                     	if(keyPrefix!= null)
                     		newKey = keyPrefix + newKey;
-                        projectProperties.put(newKey, properties.get(key));
+                    	if(!projectProperties.containsKey(newKey) || key.startsWith(configPrefix))
+                    		projectProperties.put(newKey, properties.get(key));
                     }
                 }
                 else
