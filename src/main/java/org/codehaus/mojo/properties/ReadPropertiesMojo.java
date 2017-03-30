@@ -26,7 +26,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -207,7 +210,10 @@ public class ReadPropertiesMojo
                     Properties properties = new Properties();
                     properties.load(stream);
                     Properties projectProperties = project.getProperties();
-                    for(String key: properties.stringPropertyNames())
+                    List<String> propertyNames = new ArrayList<String>();
+                    propertyNames.addAll(properties.stringPropertyNames());
+                    Collections.sort(propertyNames,new PropertyNameComparator(configPrefix));
+                    for(String key: propertyNames)
                     {
                     	String newKey = key.replaceAll(configPrefix!=null?configPrefix:"", "");
                     	if(keyPrefix!= null)
@@ -266,13 +272,14 @@ public class ReadPropertiesMojo
         boolean useEnvVariables = false;
         for ( Enumeration<?> n = projectProperties.propertyNames(); n.hasMoreElements(); )
         {
-            String k = (String) n.nextElement();
-            String p = (String) projectProperties.get( k );
-            if ( p.indexOf( "${env." ) != -1 )
-            {
-                useEnvVariables = true;
-                break;
-            }
+			String k = (String) n.nextElement();
+			if (projectProperties.get(k) instanceof String) {
+				String p = (String) projectProperties.get(k);
+				if (p.indexOf("${env.") != -1) {
+					useEnvVariables = true;
+					break;
+				}
+			}
         }
         Properties environment = null;
         if ( useEnvVariables )
