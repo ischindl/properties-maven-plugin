@@ -16,6 +16,8 @@ public class PropertyNameComparator implements Comparator<String> {
 			return -1;
 		if(o2 == null)
 			return 1;
+		if(o1.startsWith(configPrefix) && o2.startsWith(configPrefix))
+		    return o1.compareTo(o2);
 		if(o1.startsWith(configPrefix))
 			return 1;
 		if(o2.startsWith(configPrefix))
