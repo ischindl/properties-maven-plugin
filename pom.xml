@@ -31,7 +31,7 @@
 
   <groupId>sk.digitalsystems.mojo</groupId>
   <artifactId>properties-maven-plugin</artifactId>
-  <version>1.0.1.4</version>
+  <version>1.0.1.6</version>
 
   <name>Properties Maven Plugin</name>
   <description>

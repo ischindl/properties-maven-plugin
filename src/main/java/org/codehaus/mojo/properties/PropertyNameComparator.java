@@ -16,12 +16,17 @@ public class PropertyNameComparator implements Comparator<String> {
 			return -1;
 		if(o2 == null)
 			return 1;
-		if(o1.startsWith(configPrefix) && o2.startsWith(configPrefix))
-		    return o1.compareTo(o2);
-		if(o1.startsWith(configPrefix))
-			return 1;
-		if(o2.startsWith(configPrefix))
-			return -1;
+		String[] o1len = o1.split("\\.");
+		String[] o2len = o2.split("\\.");
+		// move more prefixed values to end
+		if (o1len.length != o2len.length)
+			return o1len.length > o2len.length?1:-1;
+		// if same number of prefixes
+		for(int i = 0 ; i< o1len.length;i++) {
+			if(o1len[i].compareTo(o2len[i]) != 0) {
+				return o1len[i].compareTo(o2len[i]);
+			}
+		}
 		return o1.compareTo(o2);
 	}
 
